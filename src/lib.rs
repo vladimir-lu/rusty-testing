@@ -1,23 +1,22 @@
 use std::fmt;
 
-trait LiquidContainer {
+pub trait LiquidContainer where Self: fmt::Debug {
 	fn capacity(&self) -> u32;
 }
 
-
 #[derive(Debug)]
-struct Kettle {
+pub struct Kettle {
 	capacity: u32,
 	colour: (u8, u8, u8)
 }
 
 #[derive(Debug)]
-enum CupSize {
+pub enum CupSize {
 	Small, Medium, Large
 }
 
 #[derive(Debug)]
-struct Cup {
+pub struct Cup {
 	size: CupSize
 }
 

@@ -34,21 +34,35 @@ fn numeric_equality() {
 	assert_that(1.0f64, is(close_to(1.0, 0.00001)));
 }
 
+#[test]
+fn partial_equality() {
+	let kettle = Kettle { capacity: 500, colour: (0, 0, 0) };
+	let mug = Cup { size: CupSize::Large };
 
-// FIXME
-// src/tests/with_hamcrest.rs:49:2: 49:13 error: the trait `hamcrest::core::Matcher<&Kettle>` is not implemented for the type `hamcrest::matchers::equal_to::EqualTo<&Cup>` [E0277]
+	#[derive(Debug)]
+	struct ExpectContainer<'a> {
+		expected: &'a LiquidContainer
+	}
 
-// #[test]
-// fn partial_equality() {
-// 	let kettle = Kettle { capacity: 500, colour: (0, 0, 0) };
-// 	let mug = Cup { size: CupSize::Large };
-// 
-// 	impl PartialEq for Cup {
-// 		fn eq(&self, other: &Cup) -> bool {
-// 			self.capacity() == other.capacity()
-// 		}
-// 	}
-//
-// 	assert_that(&kettle, equal_to(&mug));	
-// }
+	fn container(v: &LiquidContainer) -> ExpectContainer {
+		ExpectContainer { expected: v }
+	}
+
+	// this doesn't work because of LiquidContainer being non-local
+	// impl<T> PartialEq for T where T : LiquidContainer {
+	// 	fn eq(&self, other: &T) -> bool {
+	// 		self.capacity() == other.capacity()
+	// 	}
+	// }
+
+	impl<'a> PartialEq for ExpectContainer<'a> {
+		fn eq(&self, other: &ExpectContainer) -> bool {
+			self.expected.capacity() == other.expected.capacity()
+		}
+	}
+
+	// FIXME ideally we want this:
+	// assert_that(&kettle, equal_to(&mug));	
+	assert_that(&container(&kettle), equal_to(&container(&mug)));
+}
 
