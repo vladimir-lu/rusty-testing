@@ -1,0 +1,11 @@
+[package]
+name = "rusty-testing"
+version = "0.1.0"
+authors = ["Vladimir Lushnikov <vladimir@slate-project.org>"]
+
+[dev-dependencies]
+quickcheck = "0.2.*"
+
+# hamcrest not on crates.io yet
+[dev-dependencies.hamcrest]
+path = "lib/hamcrest"
